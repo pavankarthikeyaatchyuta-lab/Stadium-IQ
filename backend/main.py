@@ -4,6 +4,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field
 
 from backend.agents.copilot_agent import OperationsCopilot
@@ -110,6 +111,16 @@ def _context_from_input(context_input: ContextInput) -> ContextManager:
 def health() -> dict:
     try:
         return {"status": "ok", "version": "1.0.0"}
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@app.get("/")
+def get_index():
+    try:
+        index_path = Path(__file__).resolve().parent.parent / "docs" / "index.html"
+        with index_path.open("r", encoding="utf-8") as file:
+            return HTMLResponse(content=file.read(), status_code=200)
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 

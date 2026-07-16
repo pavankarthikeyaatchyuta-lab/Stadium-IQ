@@ -4,20 +4,12 @@
     {
       "src": "backend/main.py",
       "use": "@vercel/python"
-    },
-    {
-      "src": "docs/index.html",
-      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/(health|stadium-map|navigate|crowd|fan|scenario|copilot)",
-      "dest": "backend/main.py"
-    },
-    {
       "src": "/(.*)",
-      "dest": "docs/index.html"
+      "dest": "backend/main.py"
     }
   ]
 }
