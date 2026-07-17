@@ -136,7 +136,7 @@ Open `http://localhost:8000/` in your browser to view the dashboard!
 pytest -v
 ruff check .
 mypy backend/
-# Expected: 39 tests passing, 0 lint errors, 0 type errors
+# Expected: 40 tests passing, 0 lint errors, 0 type errors
 ```
 
 **Testing:** AI calls are mocked in tests — deterministic engines are tested against real logic; CI requires no API key.
