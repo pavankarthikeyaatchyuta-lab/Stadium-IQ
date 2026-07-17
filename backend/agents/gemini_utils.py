@@ -5,8 +5,10 @@ from backend.utils.cache import gemini_cache
 
 logger = logging.getLogger(__name__)
 
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+
 async def generate_gemini_text_async(model_name: str, prompt: str, fallback: str) -> str:
-    """Asynchronous generation with caching using direct REST API."""
+    """Asynchronous generation with caching using direct REST API, with Groq fallback."""
     cached = gemini_cache.get(prompt)
     if cached:
         return cached
@@ -28,11 +30,24 @@ async def generate_gemini_text_async(model_name: str, prompt: str, fallback: str
             gemini_cache.set(prompt, text)
             return text
     except Exception as e:
-        logger.error(f"Gemini API error: {e}")
-        return f"{fallback}\n\nAI note: Gemini response unavailable ({e})."
+        logger.error(f"Gemini API error: {e}. Falling back to Groq...")
+        try:
+            groq_url = "https://api.groq.com/openai/v1/chat/completions"
+            groq_headers = {"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"}
+            groq_payload = {"model": "llama3-8b-8192", "messages": [{"role": "user", "content": prompt}]}
+            async with httpx.AsyncClient() as client:
+                groq_response = await client.post(groq_url, headers=groq_headers, json=groq_payload, timeout=15.0)
+                groq_response.raise_for_status()
+                groq_data = groq_response.json()
+                text = groq_data["choices"][0]["message"]["content"]
+                gemini_cache.set(prompt, text)
+                return text
+        except Exception as groq_e:
+            logger.error(f"Groq API error: {groq_e}")
+            return f"{fallback}\n\nAI note: Gemini and Groq responses unavailable."
 
 def generate_gemini_text(model_name: str, prompt: str, fallback: str) -> str:
-    """Synchronous generation with caching using direct REST API."""
+    """Synchronous generation with caching using direct REST API, with Groq fallback."""
     cached = gemini_cache.get(prompt)
     if cached:
         return cached
@@ -54,5 +69,18 @@ def generate_gemini_text(model_name: str, prompt: str, fallback: str) -> str:
         gemini_cache.set(prompt, text)
         return text
     except Exception as e:
-        logger.error(f"Gemini API error: {e}")
-        return f"{fallback}\n\nAI note: Gemini response unavailable ({e})."
+        logger.error(f"Gemini API error: {e}. Falling back to Groq...")
+        try:
+            import requests
+            groq_url = "https://api.groq.com/openai/v1/chat/completions"
+            groq_headers = {"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"}
+            groq_payload = {"model": "llama3-8b-8192", "messages": [{"role": "user", "content": prompt}]}
+            groq_response = requests.post(groq_url, headers=groq_headers, json=groq_payload, timeout=15.0)
+            groq_response.raise_for_status()
+            groq_data = groq_response.json()
+            text = groq_data["choices"][0]["message"]["content"]
+            gemini_cache.set(prompt, text)
+            return text
+        except Exception as groq_e:
+            logger.error(f"Groq API error: {groq_e}")
+            return f"{fallback}\n\nAI note: Gemini and Groq responses unavailable."
