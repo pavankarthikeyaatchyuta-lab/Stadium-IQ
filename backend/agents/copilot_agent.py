@@ -4,7 +4,6 @@ Agent module for StadiumIQ: copilot_agent.py.
 import json
 import os
 
-import google.generativeai as genai
 from dotenv import load_dotenv
 
 from backend.agents.gemini_utils import generate_gemini_text_async
@@ -15,15 +14,13 @@ from backend.engines.graph_engine import NavigationGraph
 
 
 load_dotenv()
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 
 class OperationsCopilot:
     def __init__(self, risk_engine: CrowdRiskEngine, graph: NavigationGraph):
         self.risk_engine = risk_engine
         self.graph = graph
-        self.model = genai.GenerativeModel(model_name=GEMINI_MODEL)
-
+        
     async def get_priorities(self, language: str, context: ContextManager) -> dict:
         """Answers: What should we do RIGHT NOW?"""
         risk_analysis = self.risk_engine.analyze_stadium(
@@ -84,7 +81,7 @@ Format each priority clearly. Respond in {language}.
 """.strip()
 
         top_priorities_explanation = await generate_gemini_text_async(
-            self.model,
+            GEMINI_MODEL,
             prompt,
             (
                 "Top priorities: stabilize critical sections, manage high-risk sections, "

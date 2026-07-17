@@ -3,7 +3,6 @@ Agent module for StadiumIQ: nav_agent.py.
 """
 import os
 
-import google.generativeai as genai
 from dotenv import load_dotenv
 
 from backend.context_manager import ContextManager
@@ -13,14 +12,12 @@ from backend.engines.graph_engine import NavigationGraph
 
 
 load_dotenv()
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 
 class NavigationAgent:
     def __init__(self, graph: NavigationGraph):
         self.graph = graph
-        self.model = genai.GenerativeModel(model_name=GEMINI_MODEL)
-
+        
     async def get_directions(
         self,
         from_loc: str,
@@ -74,7 +71,7 @@ Use landmark names. Mention the gate warning prominently if present.
         )
         if gate_warning:
             fallback_directions = f"{gate_warning} {fallback_directions}"
-        directions = await generate_gemini_text_async(self.model, prompt, fallback_directions)
+        directions = await generate_gemini_text_async(GEMINI_MODEL, prompt, fallback_directions)
 
         return {
             "path": path,

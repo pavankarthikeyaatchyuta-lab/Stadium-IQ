@@ -4,7 +4,6 @@ Agent module for StadiumIQ: crowd_agent.py.
 import json
 import os
 
-import google.generativeai as genai
 from dotenv import load_dotenv
 
 from backend.agents.gemini_utils import generate_gemini_text_async
@@ -14,14 +13,12 @@ from backend.engines.crowd_risk_engine import CrowdRiskEngine
 
 
 load_dotenv()
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 
 class CrowdAgent:
     def __init__(self, risk_engine: CrowdRiskEngine):
         self.risk_engine = risk_engine
-        self.model = genai.GenerativeModel(model_name=GEMINI_MODEL)
-
+        
     async def analyze(self, language: str, context: ContextManager) -> dict:
         analysis = self.risk_engine.analyze_stadium(
             context.section_occupancy,
@@ -52,7 +49,7 @@ Respond in {language}.
 """.strip()
 
         ai_explanation = await generate_gemini_text_async(
-            self.model,
+            GEMINI_MODEL,
             prompt,
             analysis["summary"],
         )

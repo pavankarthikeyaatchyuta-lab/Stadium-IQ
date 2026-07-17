@@ -5,7 +5,6 @@ import copy
 import json
 import os
 
-import google.generativeai as genai
 from dotenv import load_dotenv
 
 from backend.agents.gemini_utils import generate_gemini_text_async
@@ -16,15 +15,13 @@ from backend.engines.graph_engine import NavigationGraph
 
 
 load_dotenv()
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 
 class ScenarioAgent:
     def __init__(self, graph: NavigationGraph, risk_engine: CrowdRiskEngine):
         self.graph = graph
         self.risk_engine = risk_engine
-        self.model = genai.GenerativeModel(model_name=GEMINI_MODEL)
-
+        
     async def simulate(
         self,
         scenario_type: str,
@@ -64,7 +61,7 @@ Respond in {language}.
 """.strip()
 
         ai_explanation = await generate_gemini_text_async(
-            self.model,
+            GEMINI_MODEL,
             prompt,
             (
                 f"Scenario severity: {computed_impact['severity']}. "

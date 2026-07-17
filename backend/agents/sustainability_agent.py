@@ -4,12 +4,11 @@ Sustainability agent to recommend eco-friendly actions based on context.
 from backend.agents.gemini_utils import generate_gemini_text_async
 from backend.config import GEMINI_MODEL
 from backend.context_manager import ContextManager
-import google.generativeai as genai
 
 
 class SustainabilityAgent:
     def __init__(self):
-        self.model = genai.GenerativeModel(model_name=GEMINI_MODEL)
+        pass
 
     async def get_eco_tip(self, language: str, context: ContextManager) -> dict:
         """Generates a sustainability recommendation based on nearby transport."""
@@ -27,7 +26,7 @@ Respond entirely in {language}.
 """.strip()
 
         ai_explanation = await generate_gemini_text_async(
-            self.model,
+            GEMINI_MODEL,
             prompt,
             "Consider using public transit to reduce carbon emissions and ease congestion.",
         )
