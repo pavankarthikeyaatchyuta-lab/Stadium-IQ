@@ -21,7 +21,7 @@ class NavigationAgent:
         self.graph = graph
         self.model = genai.GenerativeModel(model_name=GEMINI_MODEL)
 
-    def get_directions(
+    async def get_directions(
         self,
         from_loc: str,
         to_loc: str,
