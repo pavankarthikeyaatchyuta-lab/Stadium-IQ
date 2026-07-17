@@ -34,7 +34,7 @@ async def generate_gemini_text_async(model_name: str, prompt: str, fallback: str
         try:
             groq_url = "https://api.groq.com/openai/v1/chat/completions"
             groq_headers = {"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"}
-            groq_payload = {"model": "llama3-8b-8192", "messages": [{"role": "user", "content": prompt}]}
+            groq_payload = {"model": "llama-3.1-8b-instant", "messages": [{"role": "user", "content": prompt}]}
             async with httpx.AsyncClient() as client:
                 groq_response = await client.post(groq_url, headers=groq_headers, json=groq_payload, timeout=15.0)
                 groq_response.raise_for_status()
@@ -74,7 +74,7 @@ def generate_gemini_text(model_name: str, prompt: str, fallback: str) -> str:
             import requests
             groq_url = "https://api.groq.com/openai/v1/chat/completions"
             groq_headers = {"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"}
-            groq_payload = {"model": "llama3-8b-8192", "messages": [{"role": "user", "content": prompt}]}
+            groq_payload = {"model": "llama-3.1-8b-instant", "messages": [{"role": "user", "content": prompt}]}
             groq_response = requests.post(groq_url, headers=groq_headers, json=groq_payload, timeout=15.0)
             groq_response.raise_for_status()
             groq_data = groq_response.json()
