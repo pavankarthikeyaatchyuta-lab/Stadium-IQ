@@ -534,7 +534,9 @@ a, button, select, input, .tab, .gate-toggle {
       el.addEventListener("mouseleave", () => document.body.classList.remove("cursor-hover"));
     });
 
-    const API_BASE = "https://stadium-iq-rho.vercel.app";
+    const API_BASE = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+        ? "http://localhost:8000"
+        : "";
     const sections = ["A1", "A2", "B1", "B2", "C1", "C2"];
     const languages = ["English", "Hindi", "Spanish"];
     const gateState = { A: "open", B: "open", C: "closed", D: "open" };
