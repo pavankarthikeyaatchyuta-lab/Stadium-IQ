@@ -119,8 +119,10 @@ Open `http://localhost:8000/` in your browser to view the dashboard!
 ## 🧪 Testing & Enterprise Standards
 ```bash
 pytest -v
-# Expected: 26 tests, all passing across backend and root
+# Expected: 39 tests, all passing offline via Gemini mock
 ```
+
+**Testing:** AI calls are mocked in tests — deterministic engines are tested against real logic; CI requires no API key.
 
 **Efficiency:** Graph engine is O(E log V) Dijkstra, stateless and thread-safe. Gemini calls are the only external latency; deterministic results are cached at startup and across API responses.
 **Security:** Implementation includes SlowAPI rate limiting, strict CORS whitelisting, and Regex input sanitization.
