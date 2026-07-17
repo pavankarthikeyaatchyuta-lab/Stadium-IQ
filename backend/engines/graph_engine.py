@@ -5,16 +5,22 @@ from pathlib import Path
 
 
 class NavigationGraph:
+    @staticmethod
+    @lru_cache(maxsize=1)
+    def load_stadium_graph(map_path_str: str) -> dict:
+        map_path = Path(map_path_str)
+        if not map_path.exists():
+            # Fallback for some execution contexts
+            map_path = Path(__file__).resolve().parents[2] / map_path_str
+        with map_path.open("r", encoding="utf-8") as file:
+            return json.load(file)
     def __init__(self, map_path: str | None = None):
         if map_path is None:
-            map_path = Path(__file__).resolve().parent.parent / "data" / "stadium_map.json"
+            map_path_str = str(Path(__file__).resolve().parent.parent / "data" / "stadium_map.json")
         else:
-            map_path = Path(map_path)
-            if not map_path.exists():
-                map_path = Path(__file__).resolve().parents[2] / map_path
-
-        with map_path.open("r", encoding="utf-8") as file:
-            stadium_map = json.load(file)
+            map_path_str = str(map_path)
+            
+        stadium_map = self.load_stadium_graph(map_path_str)
 
         self.nodes = stadium_map["nodes"]
         self.graph = {node_id: [] for node_id in self.nodes}

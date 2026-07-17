@@ -1,5 +1,6 @@
 # ⚽ StadiumIQ — Operational Intelligence Platform for FIFA World Cup 2026
 
+![Tests](https://github.com/pavankarthikeyaatchyuta-lab/Stadium-IQ/actions/workflows/test.yml/badge.svg)
 ![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-000000?style=for-the-badge&logo=vercel)
 **Try the live dashboard here:** [https://stadium-iq-rho.vercel.app/](https://stadium-iq-rho.vercel.app/)
 
@@ -14,6 +15,13 @@ Smart Stadiums & Tournament Operations
 - **Context-first**: Every AI call includes live stadium state (time, phase, gates, occupancy, queues, weather). No generic responses.
 - **Layered architecture**: Engines → Agents → API → UI. Each layer has a single responsibility.
 - **Operational, not conversational**: The system behaves like infrastructure, not a chatbot.
+
+## 🏆 How This Maps to FIFA 2026 Operations
+| Role | Uses Module | Decision Supported |
+|---|---|---|
+| **Fan / Spectator** | SmartNav, FanAssist | "How do I avoid crowds to find food or get to my seat?" |
+| **Volunteer / Steward** | CrowdPulse | "Where should I position myself to relieve concourse pressure?" |
+| **Venue Ops Director** | ScenarioSim, Copilot | "If Gate C closes, how many staff do I need to reassign instantly?" |
 
 ## 🏗️ Architecture
 ```text
@@ -108,11 +116,15 @@ uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
 ```
 Open `http://localhost:8000/` in your browser to view the dashboard!
 
-## 🧪 Testing
+## 🧪 Testing & Enterprise Standards
 ```bash
-pytest tests/ -v
-# Expected: 26 tests, all passing
+pytest -v
+# Expected: 26 tests, all passing across backend and root
 ```
+
+**Efficiency:** Graph engine is O(E log V) Dijkstra, stateless and thread-safe. Gemini calls are the only external latency; deterministic results are cached at startup and across API responses.
+**Security:** Implementation includes SlowAPI rate limiting, strict CORS whitelisting, and Regex input sanitization.
+**Accessibility:** WCAG 2.1 AA contrast compliance, Semantic HTML5, ARIA labels, and full keyboard navigation support.
 
 ## 📈 Scalability Considerations
 - Graph engine is stateless and thread-safe; scales horizontally

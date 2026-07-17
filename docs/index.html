@@ -265,6 +265,16 @@ a, button, select, input, .tab, .gate-toggle {
   100% { transform: translateY(-30px) rotate(15deg) scale(1.05); }
 }
 
+
+/* Accessibility */
+*:focus-visible {
+  outline: 2px solid #00bfff !important;
+  outline-offset: 2px !important;
+}
+.surface {
+  background: rgba(0, 0, 0, 0.75) !important;
+}
+
 </style>
 
 </head>
@@ -304,7 +314,7 @@ a, button, select, input, .tab, .gate-toggle {
       </div>
     </header>
 
-    <section class="surface mb-5">
+    <section class="surface mb-5" aria-label="Context Settings">
       <button id="contextToggle" class="w-full flex justify-between items-center p-4" style="background: transparent; border: none; color: white; font-size: 1.1rem;" type="button" aria-expanded="true">
         <span style="font-weight: 600;">Live Context Panel</span>
         <span id="contextChevron" aria-hidden="true" style="font-size: 1.5rem; color: var(--accent);">▾</span>
@@ -314,11 +324,11 @@ a, button, select, input, .tab, .gate-toggle {
           <div class="grid grid-cols-3 gap-3">
             <label>
               <span>Time</span>
-              <input id="ctxTime" type="time" value="19:45">
+              <input aria-label="Select Time" id="ctxTime" type="time" value="19:45">
             </label>
             <label>
               <span>Match Phase</span>
-              <select id="ctxPhase">
+              <select id="ctxPhase" aria-label="Select Match Phase">
                 <option value="pre_match">Pre-Match</option>
                 <option value="first_half">First Half</option>
                 <option value="halftime" selected>Halftime</option>
@@ -328,7 +338,7 @@ a, button, select, input, .tab, .gate-toggle {
             </label>
             <label>
               <span>Weather</span>
-              <select id="ctxWeather">
+              <select id="ctxWeather" aria-label="Select Weather">
                 <option value="clear" selected>Clear</option>
                 <option value="rainy">Rainy</option>
                 <option value="humid">Humid</option>
@@ -349,11 +359,11 @@ a, button, select, input, .tab, .gate-toggle {
           <div class="mt-4 grid grid-cols-2 gap-4">
             <label>
               <span>Food Court A Queue (mins)</span>
-              <input id="queueFoodA" type="number" min="0" value="25">
+              <input aria-label="Queue Time Food Court A" id="queueFoodA" type="number" min="0" value="25">
             </label>
             <label>
               <span>Food Court B Queue (mins)</span>
-              <input id="queueFoodB" type="number" min="0" value="5">
+              <input aria-label="Queue Time Food Court B" id="queueFoodB" type="number" min="0" value="5">
             </label>
           </div>
 
@@ -373,19 +383,19 @@ a, button, select, input, .tab, .gate-toggle {
       <button class="tab" id="tab-sustainability" role="tab" aria-selected="false" data-tab="sustainability">🌱 Sustainability</button>
     </nav>
 
-    <section id="panel-navigate" class="tab-panel surface p-4" role="tabpanel">
+    <section aria-label="Navigation Panel" id="panel-navigate" class="tab-panel surface p-4" role="tabpanel">
       <div class="grid grid-cols-4 gap-4 items-center">
         <label>
           <span>From</span>
-          <select id="navFrom"></select>
+          <select id="navFrom" aria-label="Navigate From"></select>
         </label>
         <label>
           <span>To</span>
-          <select id="navTo"></select>
+          <select id="navTo" aria-label="Navigate To"></select>
         </label>
         <label>
           <span>Language</span>
-          <select id="navLanguage"></select>
+          <select id="navLanguage" aria-label="Select Navigation Language"></select>
         </label>
         <div style="align-self: flex-end;">
           <button id="navigateButton" class="btn-primary w-full" type="button">Compute Path</button>
@@ -398,11 +408,11 @@ a, button, select, input, .tab, .gate-toggle {
       </div>
     </section>
 
-    <section id="panel-crowd" class="tab-panel surface hidden p-4" role="tabpanel">
+    <section aria-label="Crowd Pulse Panel" id="panel-crowd" class="tab-panel surface hidden p-4" role="tabpanel">
       <div class="panel-header">
         <label style="width: 200px;">
           <span>Report Language</span>
-          <select id="crowdLanguage"></select>
+          <select id="crowdLanguage" aria-label="Select Crowd Analysis Language"></select>
         </label>
         <button id="crowdButton" class="btn-primary" type="button">Run Risk Analysis</button>
       </div>
@@ -412,33 +422,33 @@ a, button, select, input, .tab, .gate-toggle {
       <div id="crowdExplanation" class="text-area-box mt-5 hidden"></div>
     </section>
 
-    <section id="panel-fan" class="tab-panel surface hidden p-4" role="tabpanel">
+    <section aria-label="Fan Assist Panel" id="panel-fan" class="tab-panel surface hidden p-4" role="tabpanel">
       <div class="grid grid-cols-3 gap-4">
         <label>
           <span>Language</span>
-          <select id="fanLanguage"></select>
+          <select id="fanLanguage" aria-label="Select Fan Assist Language"></select>
         </label>
         <label>
           <span>User Location (Optional)</span>
-          <input id="fanLocation" type="text" placeholder="e.g. gate_a">
+          <input aria-label="User Location" id="fanLocation" type="text" placeholder="e.g. gate_a">
         </label>
         <label>
           <span>Accessibility Needs</span>
-          <input id="fanAccessibility" type="text" placeholder="e.g. wheelchair access">
+          <input aria-label="Accessibility Needs" id="fanAccessibility" type="text" placeholder="e.g. wheelchair access">
         </label>
       </div>
       <div id="chatArea" class="chat-area" aria-live="polite"></div>
       <div class="flex gap-2 mt-4">
-        <input id="fanInput" type="text" placeholder="Ask FanAssist about queues, gates, or transport..." style="flex: 1;">
+        <input aria-label="Enter your question" id="fanInput" type="text" placeholder="Ask FanAssist about queues, gates, or transport..." style="flex: 1;">
         <button id="fanSend" class="btn-primary" type="button">Send</button>
       </div>
     </section>
 
-    <section id="panel-scenario" class="tab-panel surface hidden p-4" role="tabpanel">
+    <section aria-label="Scenario Simulator Panel" id="panel-scenario" class="tab-panel surface hidden p-4" role="tabpanel">
       <div class="grid grid-cols-4 gap-4 items-center">
         <label>
           <span>Scenario Type</span>
-          <select id="scenarioType">
+          <select id="scenarioType" aria-label="Select Scenario Type">
             <option value="gate_closure">Gate Closure</option>
             <option value="section_overflow">Section Overflow</option>
             <option value="emergency_evacuation">Emergency Evacuation</option>
@@ -446,7 +456,7 @@ a, button, select, input, .tab, .gate-toggle {
         </label>
         <label id="scenarioGateWrap">
           <span>Target Gate</span>
-          <select id="scenarioGate">
+          <select id="scenarioGate" aria-label="Select Scenario Target Gate">
             <option value="A">Gate A</option>
             <option value="B">Gate B</option>
             <option value="C">Gate C</option>
@@ -455,11 +465,11 @@ a, button, select, input, .tab, .gate-toggle {
         </label>
         <label id="scenarioSectionWrap" class="hidden">
           <span>Target Section</span>
-          <select id="scenarioSection"></select>
+          <select id="scenarioSection" aria-label="Select Scenario Target Section"></select>
         </label>
         <label>
           <span>Language</span>
-          <select id="scenarioLanguage"></select>
+          <select id="scenarioLanguage" aria-label="Select Scenario Language"></select>
         </label>
         <div style="align-self: flex-end;">
           <button id="scenarioButton" class="btn-primary w-full" type="button">Run Simulation</button>
@@ -468,22 +478,22 @@ a, button, select, input, .tab, .gate-toggle {
       <div id="scenarioResult" class="mt-5 hidden" role="alert" aria-live="polite" style="background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem;"></div>
     </section>
 
-    <section id="panel-copilot" class="tab-panel surface hidden p-4" role="tabpanel">
+    <section aria-label="Copilot Panel" id="panel-copilot" class="tab-panel surface hidden p-4" role="tabpanel">
       <div class="panel-header">
         <label style="width: 200px;">
           <span>Language</span>
-          <select id="copilotLanguage"></select>
+          <select id="copilotLanguage" aria-label="Select Copilot Language"></select>
         </label>
         <button id="copilotButton" class="btn-primary" type="button" style="background: linear-gradient(90deg, #00d4aa, #0099ff); color: #fff; border: none;">Generate Action Plan</button>
       </div>
       <div id="copilotResult" class="hidden mt-4" role="alert" aria-live="polite"></div>
     </section>
 
-    <section id="panel-sustainability" class="tab-panel surface hidden p-4" role="tabpanel">
+    <section aria-label="Sustainability Panel" id="panel-sustainability" class="tab-panel surface hidden p-4" role="tabpanel">
       <div class="panel-header">
         <label style="width: 200px;">
           <span>Language</span>
-          <select id="sustainabilityLanguage"></select>
+          <select id="sustainabilityLanguage" aria-label="Select Sustainability Language"></select>
         </label>
         <button id="sustainabilityButton" class="btn-primary" type="button" style="background: linear-gradient(90deg, #4caf50, #81c784); color: #000; border: none;">Get Eco-Friendly Travel Tip</button>
       </div>

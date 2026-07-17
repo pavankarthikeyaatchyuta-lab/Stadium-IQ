@@ -4,6 +4,7 @@ Handles API routing, rate limiting, and CORS.
 """
 import json
 from pathlib import Path
+import re
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request
@@ -36,11 +37,16 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://stadium-iq-rho.vercel.app", "http://localhost:8000"],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type"],
 )
+
+def sanitize_input(text: str, max_length: int = 500) -> str:
+    text = text[:max_length]
+    text = re.sub(r'[<>{}]', '', text)
+    return text.strip()
 
 graph = NavigationGraph("backend/data/stadium_map.json")
 risk_engine = CrowdRiskEngine()
@@ -184,8 +190,9 @@ async def crowd(request: Request, body: CrowdRequest) -> dict:
 @limiter.limit(DEFAULT_RATE_LIMIT)
 async def fan(request: Request, body: FanRequest) -> str:
     try:
+        sanitized_query = sanitize_input(body.query)
         return await fan_agent.answer(
-            body.query,
+            sanitized_query,
             body.language,
             _context_from_input(body.context),
             body.user_location,
