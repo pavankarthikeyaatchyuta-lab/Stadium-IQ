@@ -209,10 +209,81 @@ input[type=range]::-webkit-slider-thumb {
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
 }
+
+/* Custom Pointer & BG Icons */
+body {
+  cursor: none;
+}
+a, button, select, input, .tab, .gate-toggle {
+  cursor: none !important;
+}
+
+#cursor-dot {
+  position: fixed;
+  top: 0; left: 0;
+  width: 8px; height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+#cursor-ring {
+  position: fixed;
+  top: 0; left: 0;
+  width: 36px; height: 36px;
+  border: 2px solid rgba(16, 185, 129, 0.5);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s, height 0.2s, background 0.2s;
+}
+
+.cursor-hover #cursor-ring {
+  width: 50px; height: 50px;
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.8);
+}
+
+.bg-icons {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.bg-icon {
+  position: absolute;
+  fill: rgba(255,255,255,0.03);
+  animation: floatIcon 20s infinite ease-in-out alternate;
+}
+@keyframes floatIcon {
+  0% { transform: translateY(0) rotate(0deg) scale(1); }
+  100% { transform: translateY(-30px) rotate(15deg) scale(1.05); }
+}
+
 </style>
 
 </head>
 <body>
+
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
+
+  <div class="bg-icons">
+    <!-- Soccer Ball -->
+    <svg class="bg-icon" style="top: 10%; left: 5%; width: 300px;" viewBox="0 0 512 512"><path d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zM140.7 77.21c25.4-15.02 52.61-26.4 81.33-33.15l-19.49 71.9l-61.84 53.07zM256 168.9l51.52-16.14l41.01 44.18l-15.65 58.46H179.1l-15.65-58.46l41.01-44.18zm84.44-58.54l-19.49-71.9c28.72 6.74 55.93 18.13 81.33 33.15zM61.42 165.7c15.22-31.54 36.65-59.5 62.88-81.82l10.97 73.83L80.64 213.3zm21.37 101.9c-2.43 14.53-4.04 29.35-4.04 44.5c0 30.68 5.76 60.1 16.03 87.61L63.59 344.2zm64.44 140.3c27.17 21 60.59 35.83 96.65 41.52l4.98-72.15l-51.4-44.1l-50.23 60.6zM321.3 405.3l-50.23-60.6l-51.4 44.1l4.98 72.15c36.06-5.69 69.47-20.52 96.65-41.52zM362.4 295.6l-47.58 37.66l22.25 61.26c-13.88 12.63-29.28 23.36-45.92 31.95L309.7 357l-53.7-16.8l-53.7 16.8l18.52 69.48c-16.64-8.58-32.05-19.31-45.92-31.95l22.25-61.26l-47.58-37.66C153 282 153.9 269 156 256h199.1c2.1 13 3 26 3 39.6zM450.6 344.2l-31.19 55.45c-20.89 27.67-47.78 50.81-79.06 67.28l10.97-73.83zM431.4 213.3l-54.63-55.53l10.97-73.83c26.23 22.31 47.66 50.28 62.88 81.82zM450.6 167.8l-31.19 55.45c10.27 27.5 16.03 56.92 16.03 87.6c0 15.15-1.61 29.96-4.04 44.5z"/></svg>
+
+    <!-- Map Marker -->
+    <svg class="bg-icon" style="bottom: 10%; right: 5%; width: 250px;" viewBox="0 0 384 512"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>
+
+    <!-- Brain / AI -->
+    <svg class="bg-icon" style="top: 40%; left: 40%; width: 400px; opacity: 0.02;" viewBox="0 0 512 512"><path d="M208 48C208 21.5 229.5 0 256 0s48 21.5 48 48v25.2c56.8 11.2 101.4 54.3 114.7 110.8h25.3c26.5 0 48 21.5 48 48s-21.5 48-48 48h-25.3c-13.3 56.5-57.9 99.6-114.7 110.8V464c0 26.5-21.5 48-48 48s-48-21.5-48-48V390.8C151.2 379.6 106.6 336.5 93.3 280H68c-26.5 0-48-21.5-48-48s21.5-48 48-48h25.3C106.6 127.5 151.2 84.4 208 73.2V48zm48 104a104 104 0 1 0 0 208 104 104 0 1 0 0-208z"/></svg>
+  </div>
+
   <div id="loadingOverlay" class="overlay hidden" aria-live="polite" aria-label="Loading">
     <div class="surface flex items-center gap-3 p-4">
       <div class="spinner" aria-hidden="true"></div>
@@ -421,6 +492,35 @@ input[type=range]::-webkit-slider-thumb {
   </main>
 
   <script>
+    
+    // Custom Cursor Logic
+    const cursorDot = document.getElementById("cursor-dot");
+    const cursorRing = document.getElementById("cursor-ring");
+    let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+    let ringX = mouseX, ringY = mouseY;
+
+    window.addEventListener("mousemove", (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      cursorDot.style.left = `${mouseX}px`;
+      cursorDot.style.top = `${mouseY}px`;
+    });
+
+    function animateCursor() {
+      ringX += (mouseX - ringX) * 0.15;
+      ringY += (mouseY - ringY) * 0.15;
+      cursorRing.style.left = `${ringX}px`;
+      cursorRing.style.top = `${ringY}px`;
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    const interactables = document.querySelectorAll("a, button, input, select, .tab, .gate-toggle");
+    interactables.forEach(el => {
+      el.addEventListener("mouseenter", () => document.body.classList.add("cursor-hover"));
+      el.addEventListener("mouseleave", () => document.body.classList.remove("cursor-hover"));
+    });
+
     const API_BASE = "https://stadium-iq-rho.vercel.app";
     const sections = ["A1", "A2", "B1", "B2", "C1", "C2"];
     const languages = ["English", "Hindi", "Spanish"];
