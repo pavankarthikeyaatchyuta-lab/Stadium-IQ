@@ -28,7 +28,7 @@ async def generate_gemini_text_async(model_name: str, prompt: str, fallback: str
             response.raise_for_status()
             data = response.json()
             text = data["candidates"][0]["content"]["parts"][0]["text"]
-            gemini_cache.set(prompt, text)
+            gemini_cache.set(prompt, value=text)
             return text
     except Exception as e:
         logger.error(f"Gemini API error: {e}. Falling back to Groq...")
@@ -41,7 +41,7 @@ async def generate_gemini_text_async(model_name: str, prompt: str, fallback: str
                 groq_response.raise_for_status()
                 groq_data = groq_response.json()
                 text = groq_data["choices"][0]["message"]["content"]
-                gemini_cache.set(prompt, text)
+                gemini_cache.set(prompt, value=text)
                 return text
         except Exception as groq_e:
             logger.error(f"Groq API error: {groq_e}")
@@ -67,7 +67,7 @@ def generate_gemini_text(model_name: str, prompt: str, fallback: str) -> str:
         response.raise_for_status()
         data = response.json()
         text = data["candidates"][0]["content"]["parts"][0]["text"]
-        gemini_cache.set(prompt, text)
+        gemini_cache.set(prompt, value=text)
         return text
     except Exception as e:
         logger.error(f"Gemini API error: {e}. Falling back to Groq...")
@@ -80,7 +80,7 @@ def generate_gemini_text(model_name: str, prompt: str, fallback: str) -> str:
             groq_response.raise_for_status()
             groq_data = groq_response.json()
             text = groq_data["choices"][0]["message"]["content"]
-            gemini_cache.set(prompt, text)
+            gemini_cache.set(prompt, value=text)
             return text
         except Exception as groq_e:
             logger.error(f"Groq API error: {groq_e}")
