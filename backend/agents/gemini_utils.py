@@ -34,7 +34,7 @@ async def generate_gemini_text_async(model_name: str, prompt: str, fallback: str
         logger.error(f"Gemini API error: {e}. Falling back to Groq...")
         try:
             groq_url = "https://api.groq.com/openai/v1/chat/completions"
-            groq_headers = {"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"}
+            groq_headers = {"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json", "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
             groq_payload = {"model": "llama-3.1-8b-instant", "messages": [{"role": "user", "content": prompt}]}
             async with httpx.AsyncClient() as client:
                 groq_response = await client.post(groq_url, headers=groq_headers, json=groq_payload, timeout=15.0)
@@ -45,7 +45,7 @@ async def generate_gemini_text_async(model_name: str, prompt: str, fallback: str
                 return text
         except Exception as groq_e:
             logger.error(f"Groq API error: {groq_e}")
-            return f"{fallback}\n\nAI note: Gemini and Groq responses unavailable."
+            return f"{fallback}\n\nAI note: Gemini and Groq responses unavailable. Error: {str(groq_e)}"
 
 def generate_gemini_text(model_name: str, prompt: str, fallback: str) -> str:
     """Synchronous generation with caching using direct REST API, with Groq fallback."""
@@ -74,7 +74,7 @@ def generate_gemini_text(model_name: str, prompt: str, fallback: str) -> str:
         try:
             import requests
             groq_url = "https://api.groq.com/openai/v1/chat/completions"
-            groq_headers = {"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"}
+            groq_headers = {"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json", "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
             groq_payload = {"model": "llama-3.1-8b-instant", "messages": [{"role": "user", "content": prompt}]}
             groq_response = requests.post(groq_url, headers=groq_headers, json=groq_payload, timeout=15.0)
             groq_response.raise_for_status()
@@ -84,4 +84,4 @@ def generate_gemini_text(model_name: str, prompt: str, fallback: str) -> str:
             return text
         except Exception as groq_e:
             logger.error(f"Groq API error: {groq_e}")
-            return f"{fallback}\n\nAI note: Gemini and Groq responses unavailable."
+            return f"{fallback}\n\nAI note: Gemini and Groq responses unavailable. Error: {str(groq_e)}"
