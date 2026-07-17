@@ -10,14 +10,13 @@ from backend.config import GEMINI_MODEL
 from backend.context_manager import ContextManager
 from backend.engines.crowd_risk_engine import CrowdRiskEngine
 
-
 load_dotenv()
 
 
 class CrowdAgent:
     def __init__(self, risk_engine: CrowdRiskEngine):
         self.risk_engine = risk_engine
-        
+
     async def analyze(self, language: str, context: ContextManager) -> dict:
         analysis = self.risk_engine.analyze_stadium(
             context.section_occupancy,

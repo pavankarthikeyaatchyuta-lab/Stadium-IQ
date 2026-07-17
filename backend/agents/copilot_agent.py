@@ -11,7 +11,6 @@ from backend.context_manager import ContextManager
 from backend.engines.crowd_risk_engine import CrowdRiskEngine
 from backend.engines.graph_engine import NavigationGraph
 
-
 load_dotenv()
 
 
@@ -19,7 +18,7 @@ class OperationsCopilot:
     def __init__(self, risk_engine: CrowdRiskEngine, graph: NavigationGraph):
         self.risk_engine = risk_engine
         self.graph = graph
-        
+
     async def get_priorities(self, language: str, context: ContextManager) -> dict:
         """Answers: What should we do RIGHT NOW?"""
         risk_analysis = self.risk_engine.analyze_stadium(

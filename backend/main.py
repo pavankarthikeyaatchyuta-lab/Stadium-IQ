@@ -3,15 +3,14 @@ Main FastAPI entry point for StadiumIQ.
 Handles API routing, rate limiting, and CORS.
 """
 import json
-from pathlib import Path
 import re
+from pathlib import Path
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field
-
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
@@ -22,18 +21,17 @@ from backend.agents.fan_agent import FanAssistAgent
 from backend.agents.nav_agent import NavigationAgent
 from backend.agents.scenario_agent import ScenarioAgent
 from backend.agents.sustainability_agent import SustainabilityAgent
+from backend.config import DEFAULT_RATE_LIMIT, MAX_QUERY_LENGTH, VERSION
 from backend.context_manager import ContextManager
 from backend.engines.crowd_risk_engine import CrowdRiskEngine
 from backend.engines.graph_engine import NavigationGraph
-from backend.config import DEFAULT_RATE_LIMIT, MAX_QUERY_LENGTH, VERSION
-
 
 load_dotenv()
 
 limiter = Limiter(key_func=get_remote_address)
 app = FastAPI(title="StadiumIQ", version=VERSION)
 app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)  # type: ignore
 
 app.add_middleware(
     CORSMiddleware,

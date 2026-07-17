@@ -4,11 +4,10 @@ Agent module for StadiumIQ: nav_agent.py.
 
 from dotenv import load_dotenv
 
-from backend.context_manager import ContextManager
 from backend.agents.gemini_utils import generate_gemini_text_async
 from backend.config import GEMINI_MODEL
+from backend.context_manager import ContextManager
 from backend.engines.graph_engine import NavigationGraph
-
 
 load_dotenv()
 
@@ -16,7 +15,7 @@ load_dotenv()
 class NavigationAgent:
     def __init__(self, graph: NavigationGraph):
         self.graph = graph
-        
+
     async def get_directions(
         self,
         from_loc: str,

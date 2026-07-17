@@ -3,6 +3,7 @@ Agent module for StadiumIQ: scenario_agent.py.
 """
 import copy
 import json
+import typing
 
 from dotenv import load_dotenv
 
@@ -12,7 +13,6 @@ from backend.context_manager import ContextManager
 from backend.engines.crowd_risk_engine import CrowdRiskEngine
 from backend.engines.graph_engine import NavigationGraph
 
-
 load_dotenv()
 
 
@@ -20,7 +20,7 @@ class ScenarioAgent:
     def __init__(self, graph: NavigationGraph, risk_engine: CrowdRiskEngine):
         self.graph = graph
         self.risk_engine = risk_engine
-        
+
     async def simulate(
         self,
         scenario_type: str,
@@ -208,7 +208,11 @@ Respond in {language}.
         return sorted(affected_sections)
 
     def _nearest_route(self, start: str, destinations: list[str]) -> dict:
-        best_route = {"path": [], "path_names": [], "estimated_minutes": None}
+        best_route: dict[str, typing.Any] = {
+            "path": [],
+            "path_names": [],
+            "estimated_minutes": None
+        }
 
         for destination in destinations:
             path = self.graph.find_path(start, destination)

@@ -1,8 +1,8 @@
+import asyncio
+
 from backend.agents.sustainability_agent import SustainabilityAgent
 from backend.context_manager import ContextManager
 
-
-import asyncio
 
 def test_sustainability_agent():
     agent = SustainabilityAgent()
@@ -20,9 +20,9 @@ def test_sustainability_agent():
             "parking_south": "available",
         }
     })
-    
+
     result = asyncio.run(agent.get_eco_tip("English", context))
-    
+
     assert "eco_tip" in result
     assert "transport_context" in result
     assert result["language"] == "English"

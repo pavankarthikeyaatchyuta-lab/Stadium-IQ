@@ -1,12 +1,10 @@
 import sys
 from pathlib import Path
 
-
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from backend.engines.crowd_risk_engine import CrowdRiskEngine
 from backend.engines.graph_engine import NavigationGraph
-
 
 graph = NavigationGraph("backend/data/stadium_map.json")
 engine = CrowdRiskEngine()

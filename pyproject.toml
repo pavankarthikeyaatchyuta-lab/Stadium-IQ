@@ -1,0 +1,17 @@
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B"]
+ignore = ["B008"]  # Allow function calls in default arguments (common in FastAPI Depends/Field)
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+strict_optional = true
+
+# Only enforce strict typing on the core logic and engines to avoid noisy 3rd party stubs
+[[tool.mypy.overrides]]
+module = "backend.engines.*"
+disallow_untyped_defs = true

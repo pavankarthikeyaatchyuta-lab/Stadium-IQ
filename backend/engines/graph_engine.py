@@ -19,11 +19,11 @@ class NavigationGraph:
             map_path_str = str(Path(__file__).resolve().parent.parent / "data" / "stadium_map.json")
         else:
             map_path_str = str(map_path)
-            
+
         stadium_map = self.load_stadium_graph(map_path_str)
 
         self.nodes = stadium_map["nodes"]
-        self.graph = {node_id: [] for node_id in self.nodes}
+        self.graph: dict[str, list[tuple[str, int]]] = {node_id: [] for node_id in self.nodes}
 
         for edge in stadium_map["edges"]:
             start = edge["from"]
@@ -32,7 +32,14 @@ class NavigationGraph:
             self.graph[start].append((end, weight))
             self.graph[end].append((start, weight))
 
-    def _dijkstra(self, start, end, blocked_nodes=[]):
+    def _dijkstra(
+        self,
+        start: str,
+        end: str,
+        blocked_nodes: tuple[str, ...] | list[str] | None = None
+    ) -> list[str]:
+        if blocked_nodes is None:
+            blocked_nodes = []
         blocked = set(blocked_nodes)
         if start in blocked or end in blocked:
             return []
@@ -62,7 +69,7 @@ class NavigationGraph:
 
         return []
 
-    @lru_cache(maxsize=128)
+    @lru_cache(maxsize=128)  # noqa: B019
     def _dijkstra_cached(self, start: str, end: str, blocked_nodes: tuple[str, ...]) -> list[str]:
         return self._dijkstra(start, end, blocked_nodes)
 

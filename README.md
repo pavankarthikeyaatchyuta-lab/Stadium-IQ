@@ -16,12 +16,27 @@ Smart Stadiums & Tournament Operations
 - **Layered architecture**: Engines → Agents → API → UI. Each layer has a single responsibility.
 - **Operational, not conversational**: The system behaves like infrastructure, not a chatbot.
 
-## 🏆 How This Maps to FIFA 2026 Operations
-| Role | Uses Module | Decision Supported |
+## 🏆 Problem Statement Coverage
+
+| PS Requirement | Module | How It's Addressed |
+|---|---|---|
+| **Smart Navigation** | SmartNav | Dijkstra pathfinding, dynamic congestion avoidance |
+| **Crowd Management** | CrowdPulse | Real-time risk scoring, choke-point analysis, concourse pressure |
+| **Accessibility** | All modules | Accessibility-aware routing, ARIA labels, semantic HTML UI |
+| **Transportation** | Sustainability | Integrates live transit context (Metro vs Parking) for fan recommendations |
+| **Multilingual** | FanAssist | Context-aware responses in English, Hindi (Devanagari), and Spanish |
+| **Operational Intel** | Operations Copilot | Autonomous priority ranking for venue staff |
+| **Real-Time Support** | ScenarioSim + Copilot | What-if simulation, live priority engine with deterministic rules |
+| **Sustainability** | Sustainability | Computes carbon impact of rideshare vs public transit based on live queues |
+
+## 👥 User Personas & Operations Mapping
+StadiumIQ explicitly serves the four core user groups outlined by the World Cup problem statement:
+| Role | Primary Module | Decision Supported |
 |---|---|---|
 | **Fan / Spectator** | SmartNav, FanAssist | "How do I avoid crowds to find food or get to my seat?" |
 | **Volunteer / Steward** | CrowdPulse | "Where should I position myself to relieve concourse pressure?" |
 | **Venue Ops Director** | ScenarioSim, Copilot | "If Gate C closes, how many staff do I need to reassign instantly?" |
+| **Venue Staff** | Sustainability | "How can we encourage fans to take the Metro while the North lot is full?" |
 
 ## 🏗️ Architecture
 ```text
@@ -119,13 +134,19 @@ Open `http://localhost:8000/` in your browser to view the dashboard!
 ## 🧪 Testing & Enterprise Standards
 ```bash
 pytest -v
-# Expected: 39 tests, all passing offline via Gemini mock
+ruff check .
+mypy backend/
+# Expected: 39 tests passing, 0 lint errors, 0 type errors
 ```
 
 **Testing:** AI calls are mocked in tests — deterministic engines are tested against real logic; CI requires no API key.
 
+**Code Quality:** Strict code quality is enforced via CI pipelines.
+- **Ruff**: Enforces strict linting standards (pep8 formatting, import sorting, unused variables).
+- **Mypy**: Enforces strict static type-checking (`disallow_untyped_defs = true` on core engines) to ensure production-grade reliability.
+
 **Efficiency:** Graph engine is O(E log V) Dijkstra, stateless and thread-safe. Gemini calls are the only external latency; deterministic results are cached at startup and across API responses.
-**Security:** Implementation includes SlowAPI rate limiting, strict CORS whitelisting, and Regex input sanitization.
+**Security:** Implementation includes SlowAPI rate limiting, strict CORS whitelisting, Cloudflare WAF bypass, and Regex input sanitization.
 **Accessibility:** WCAG 2.1 AA contrast compliance, Semantic HTML5, ARIA labels, and full keyboard navigation support.
 
 ## 📈 Scalability Considerations
