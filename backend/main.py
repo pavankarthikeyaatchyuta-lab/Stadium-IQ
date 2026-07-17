@@ -126,6 +126,11 @@ class SustainabilityRequest(BaseModel):
     context: ContextInput = Field(default_factory=ContextInput)
 
 
+class TransportRequest(BaseModel):
+    language: str = Field(default="English", max_length=MAX_QUERY_LENGTH)
+    context: ContextInput = Field(default_factory=ContextInput)
+
+
 def _context_from_input(context_input: ContextInput) -> ContextManager:
     return ContextManager.from_dict(context_input.model_dump())
 
@@ -234,5 +239,20 @@ async def sustainability(request: Request, body: SustainabilityRequest) -> dict:
             body.language,
             _context_from_input(body.context),
         )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@app.post("/transport-status")
+@limiter.limit("30/minute")
+async def transport_status(request: Request, body: TransportRequest) -> dict:
+    try:
+        context = body.context
+        return {
+            "metro": context.nearby_transport.get("metro", "unknown"),
+            "parking_north": context.nearby_transport.get("parking_north", "unknown"),
+            "parking_south": context.nearby_transport.get("parking_south", "unknown"),
+            "rideshare_wait": context.nearby_transport.get("rideshare", "unknown"),
+        }
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc

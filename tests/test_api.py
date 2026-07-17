@@ -99,3 +99,14 @@ def test_sustainability_endpoint():
     assert response.status_code == 200
     data = response.json()
     assert "eco_tip" in data
+
+def test_transport_endpoint():
+    payload = {
+        "language": "English",
+        "context": {}
+    }
+    response = client.post("/transport-status", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert "metro" in data
+    assert "rideshare_wait" in data
