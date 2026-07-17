@@ -1,5 +1,6 @@
 import heapq
 import json
+from functools import lru_cache
 from pathlib import Path
 
 
@@ -55,8 +56,14 @@ class NavigationGraph:
 
         return []
 
-    def find_path(self, start: str, end: str, avoid_nodes: list[str] = []) -> list[str]:
-        return self._dijkstra(start, end, avoid_nodes)
+    @lru_cache(maxsize=128)
+    def _dijkstra_cached(self, start: str, end: str, blocked_nodes: tuple[str, ...]) -> list[str]:
+        return self._dijkstra(start, end, blocked_nodes)
+
+    def find_path(self, start: str, end: str, avoid_nodes: list[str] | None = None) -> list[str]:
+        if avoid_nodes is None:
+            avoid_nodes = []
+        return self._dijkstra_cached(start, end, tuple(avoid_nodes))
 
     def get_path_summary(self, path: list[str]) -> dict:
         estimated_minutes = 0

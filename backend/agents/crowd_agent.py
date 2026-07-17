@@ -1,10 +1,14 @@
+"""
+Agent module for StadiumIQ: crowd_agent.py.
+"""
 import json
 import os
 
 import google.generativeai as genai
 from dotenv import load_dotenv
 
-from backend.agents.gemini_utils import generate_gemini_text
+from backend.agents.gemini_utils import generate_gemini_text_async
+from backend.config import GEMINI_MODEL
 from backend.context_manager import ContextManager
 from backend.engines.crowd_risk_engine import CrowdRiskEngine
 
@@ -16,9 +20,9 @@ genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 class CrowdAgent:
     def __init__(self, risk_engine: CrowdRiskEngine):
         self.risk_engine = risk_engine
-        self.model = genai.GenerativeModel(model_name="gemini-1.5-flash")
+        self.model = genai.GenerativeModel(model_name=GEMINI_MODEL)
 
-    def analyze(self, language: str, context: ContextManager) -> dict:
+    async def analyze(self, language: str, context: ContextManager) -> dict:
         analysis = self.risk_engine.analyze_stadium(
             context.section_occupancy,
             context.match_phase,
@@ -47,7 +51,7 @@ Explain WHY each action is prioritized based on the risk scores.
 Respond in {language}.
 """.strip()
 
-        ai_explanation = generate_gemini_text(
+        ai_explanation = await generate_gemini_text_async(
             self.model,
             prompt,
             analysis["summary"],

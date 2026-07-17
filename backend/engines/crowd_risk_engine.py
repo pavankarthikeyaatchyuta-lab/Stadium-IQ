@@ -54,7 +54,7 @@ class CrowdRiskEngine:
         nearest_food_court = self._nearest_food_court(section_id)
         if queue_times.get(nearest_food_court, 0) > 20:
             risk_score += 10
-            risk_factors.append(f"Nearest food court queue exceeds 20 minutes")
+            risk_factors.append("Nearest food court queue exceeds 20 minutes")
 
         final_score = min(risk_score, 100)
         risk_level = self._risk_level(final_score)

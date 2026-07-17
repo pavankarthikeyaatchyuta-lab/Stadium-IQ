@@ -1,10 +1,14 @@
+"""
+Agent module for StadiumIQ: copilot_agent.py.
+"""
 import json
 import os
 
 import google.generativeai as genai
 from dotenv import load_dotenv
 
-from backend.agents.gemini_utils import generate_gemini_text
+from backend.agents.gemini_utils import generate_gemini_text_async
+from backend.config import GEMINI_MODEL
 from backend.context_manager import ContextManager
 from backend.engines.crowd_risk_engine import CrowdRiskEngine
 from backend.engines.graph_engine import NavigationGraph
@@ -18,9 +22,9 @@ class OperationsCopilot:
     def __init__(self, risk_engine: CrowdRiskEngine, graph: NavigationGraph):
         self.risk_engine = risk_engine
         self.graph = graph
-        self.model = genai.GenerativeModel(model_name="gemini-1.5-flash")
+        self.model = genai.GenerativeModel(model_name=GEMINI_MODEL)
 
-    def get_priorities(self, language: str, context: ContextManager) -> dict:
+    async def get_priorities(self, language: str, context: ContextManager) -> dict:
         """Answers: What should we do RIGHT NOW?"""
         risk_analysis = self.risk_engine.analyze_stadium(
             context.section_occupancy,
@@ -79,7 +83,7 @@ For each priority, provide:
 Format each priority clearly. Respond in {language}.
 """.strip()
 
-        top_priorities_explanation = generate_gemini_text(
+        top_priorities_explanation = await generate_gemini_text_async(
             self.model,
             prompt,
             (

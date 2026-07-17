@@ -1,10 +1,14 @@
+"""
+Agent module for StadiumIQ: fan_agent.py.
+"""
 import os
 
 import google.generativeai as genai
 from dotenv import load_dotenv
 
-from backend.agents.gemini_utils import generate_gemini_text
+from backend.config import GEMINI_MODEL
 from backend.context_manager import ContextManager
+from backend.agents.gemini_utils import generate_gemini_text_async
 
 
 load_dotenv()
@@ -13,9 +17,9 @@ genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 class FanAssistAgent:
     def __init__(self):
-        self.model = genai.GenerativeModel(model_name="gemini-1.5-flash")
+        self.model = genai.GenerativeModel(model_name=GEMINI_MODEL)
 
-    def answer(
+    async def answer(
         self,
         query: str,
         language: str,
@@ -50,7 +54,7 @@ RULES:
 - Respond entirely in {language} (English / हिंदी / Espanol)
 """.strip()
 
-        return generate_gemini_text(
+        return await generate_gemini_text_async(
             self.model,
             f"{system_prompt}\n\nFan query: {query}",
             "I can help with gates, queues, routes, accessibility, and transport using the live stadium context.",

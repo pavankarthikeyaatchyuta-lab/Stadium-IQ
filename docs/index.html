@@ -201,6 +201,15 @@ input[type=range]::-webkit-slider-thumb {
 }
 .priority-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--accent); }
 .priority-number { position: absolute; top: -10px; right: 10px; font-size: 4rem; font-weight: 700; color: rgba(255,255,255,0.03); z-index: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
   </style>
 </head>
 <body>
@@ -290,6 +299,7 @@ input[type=range]::-webkit-slider-thumb {
       <button class="tab" id="tab-fan" role="tab" aria-selected="false" data-tab="fan">🤖 FanAssist</button>
       <button class="tab" id="tab-scenario" role="tab" aria-selected="false" data-tab="scenario">⚡ ScenarioSim <span class="badge badge-org" style="margin-left:5px;">Org</span></button>
       <button class="tab" id="tab-copilot" role="tab" aria-selected="false" data-tab="copilot">🧠 Copilot <span class="badge badge-ai" style="margin-left:5px;">AI</span></button>
+      <button class="tab" id="tab-sustainability" role="tab" aria-selected="false" data-tab="sustainability">🌱 Sustainability</button>
     </nav>
 
     <section id="panel-navigate" class="tab-panel surface p-4" role="tabpanel">
@@ -310,7 +320,7 @@ input[type=range]::-webkit-slider-thumb {
           <button id="navigateButton" class="btn-primary w-full" type="button">Compute Path</button>
         </div>
       </div>
-      <div id="navResult" class="mt-5 hidden">
+      <div id="navResult" class="mt-5 hidden" role="alert" aria-live="polite">
         <div id="gateWarning" class="hidden mb-4 p-4" style="background: rgba(255,170,0,0.1); border: 1px solid var(--warning); color: var(--warning); border-radius: 8px;"></div>
         <div id="breadcrumb" class="flex gap-2" style="flex-wrap: wrap; margin-bottom: 1rem;"></div>
         <div id="directions" class="text-area-box"></div>
@@ -384,7 +394,7 @@ input[type=range]::-webkit-slider-thumb {
           <button id="scenarioButton" class="btn-primary w-full" type="button">Run Simulation</button>
         </div>
       </div>
-      <div id="scenarioResult" class="mt-5 hidden" style="background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem;"></div>
+      <div id="scenarioResult" class="mt-5 hidden" role="alert" aria-live="polite" style="background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem;"></div>
     </section>
 
     <section id="panel-copilot" class="tab-panel surface hidden p-4" role="tabpanel">
@@ -395,7 +405,18 @@ input[type=range]::-webkit-slider-thumb {
         </label>
         <button id="copilotButton" class="btn-primary" type="button" style="background: linear-gradient(90deg, #00d4aa, #0099ff); color: #fff; border: none;">Generate Action Plan</button>
       </div>
-      <div id="copilotResult" class="hidden mt-4"></div>
+      <div id="copilotResult" class="hidden mt-4" role="alert" aria-live="polite"></div>
+    </section>
+
+    <section id="panel-sustainability" class="tab-panel surface hidden p-4" role="tabpanel">
+      <div class="panel-header">
+        <label style="width: 200px;">
+          <span>Language</span>
+          <select id="sustainabilityLanguage"></select>
+        </label>
+        <button id="sustainabilityButton" class="btn-primary" type="button" style="background: linear-gradient(90deg, #4caf50, #81c784); color: #000; border: none;">Get Eco-Friendly Travel Tip</button>
+      </div>
+      <div id="sustainabilityResult" class="hidden mt-4 text-area-box" role="alert" aria-live="polite"></div>
     </section>
   </main>
 
@@ -443,8 +464,14 @@ input[type=range]::-webkit-slider-thumb {
     }
 
     function populateLanguages() {
-      ["navLanguage", "crowdLanguage", "fanLanguage", "scenarioLanguage", "copilotLanguage"].forEach((id) => {
+      ["navLanguage", "crowdLanguage", "fanLanguage", "scenarioLanguage", "copilotLanguage", "sustainabilityLanguage"].forEach((id) => {
         $(id).innerHTML = languages.map((l) => `<option value="${l}">${l}</option>`).join("");
+        $(id).addEventListener("change", (e) => {
+          let langCode = "en";
+          if (e.target.value === "Spanish") langCode = "es";
+          else if (e.target.value === "Hindi") langCode = "hi";
+          document.documentElement.lang = langCode;
+        });
       });
     }
 
@@ -678,6 +705,14 @@ input[type=range]::-webkit-slider-thumb {
       $("copilotResult").classList.remove("hidden");
     }
 
+    async function runSustainability() {
+      const data = await apiFetch("/sustainability", {
+        method: "POST", body: JSON.stringify({ language: $("sustainabilityLanguage").value, context: getContext() })
+      });
+      $("sustainabilityResult").textContent = data.eco_tip;
+      $("sustainabilityResult").classList.remove("hidden");
+    }
+
     function initEvents() {
       $("contextToggle").addEventListener("click", () => {
         const p = $("contextPanel");
@@ -693,6 +728,7 @@ input[type=range]::-webkit-slider-thumb {
       $("scenarioType").addEventListener("change", updateScenarioParams);
       $("scenarioButton").addEventListener("click", () => simulateScenario().catch(()=>{}));
       $("copilotButton").addEventListener("click", () => runCopilot().catch(()=>{}));
+      $("sustainabilityButton").addEventListener("click", () => runSustainability().catch(()=>{}));
     }
 
     async function init() {
