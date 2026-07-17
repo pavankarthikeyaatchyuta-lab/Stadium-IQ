@@ -275,10 +275,13 @@ a, button, select, input, .tab, .gate-toggle {
   background: rgba(0, 0, 0, 0.75) !important;
 }
 
+.skip-link { position: absolute; left: -9999px; }
+.skip-link:focus { left: 8px; top: 8px; z-index: 999; background: #000; color: #fff; padding: 8px; }
 </style>
 
 </head>
 <body>
+    <a href="#panel-navigate" class="skip-link">Skip to main content</a>
 
   <div id="cursor-dot"></div>
   <div id="cursor-ring"></div>
