@@ -1,7 +1,6 @@
 """
 Agent module for StadiumIQ: fan_agent.py.
 """
-import os
 
 from dotenv import load_dotenv
 

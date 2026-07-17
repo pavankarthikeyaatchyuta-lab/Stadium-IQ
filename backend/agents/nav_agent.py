@@ -1,7 +1,6 @@
 """
 Agent module for StadiumIQ: nav_agent.py.
 """
-import os
 
 from dotenv import load_dotenv
 

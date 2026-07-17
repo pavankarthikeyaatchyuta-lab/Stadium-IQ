@@ -2,7 +2,6 @@
 Agent module for StadiumIQ: crowd_agent.py.
 """
 import json
-import os
 
 from dotenv import load_dotenv
 

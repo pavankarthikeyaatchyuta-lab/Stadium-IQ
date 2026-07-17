@@ -3,7 +3,6 @@ Agent module for StadiumIQ: scenario_agent.py.
 """
 import copy
 import json
-import os
 
 from dotenv import load_dotenv
 

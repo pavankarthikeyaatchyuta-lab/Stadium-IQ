@@ -2,7 +2,6 @@
 Agent module for StadiumIQ: copilot_agent.py.
 """
 import json
-import os
 
 from dotenv import load_dotenv
 

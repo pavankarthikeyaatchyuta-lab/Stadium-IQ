@@ -13,7 +13,6 @@ from backend.agents.scenario_agent import ScenarioAgent
 from backend.context_manager import ContextManager
 from backend.engines.crowd_risk_engine import CrowdRiskEngine
 from backend.engines.graph_engine import NavigationGraph
-from backend.utils.cache import gemini_cache
 
 
 graph = NavigationGraph("backend/data/stadium_map.json")

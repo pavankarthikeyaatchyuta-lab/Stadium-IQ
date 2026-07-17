@@ -1,4 +1,3 @@
-import pytest
 from backend.agents.sustainability_agent import SustainabilityAgent
 from backend.context_manager import ContextManager
 
